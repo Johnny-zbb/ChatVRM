@@ -11,7 +11,7 @@ export async function synthesizeVoiceApi(
   style: TalkStyle,
   apiKey: string
 ) {
-  // Free向けに感情を制限する
+  // Limit emotions for Free tier
   const reducedStyle = reduceTalkStyle(style);
 
   try {

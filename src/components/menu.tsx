@@ -6,6 +6,13 @@ import React, { useCallback, useContext, useRef, useState } from "react";
 import { Settings } from "./settings";
 import { ViewerContext } from "@/features/vrmViewer/viewerContext";
 import { AssistantText } from "./assistantText";
+import enMessages from '@/i18n/locales/en.json';
+import zhMessages from '@/i18n/locales/zh.json';
+
+const i18nMessages = {
+  en: enMessages,
+  zh: zhMessages,
+};
 
 type Props = {
   openAiKey: string;
@@ -21,6 +28,7 @@ type Props = {
   handleClickResetChatLog: () => void;
   handleClickResetSystemPrompt: () => void;
   onChangeKoeiromapKey: (key: string) => void;
+  locale?: string;
 };
 export const Menu = ({
   openAiKey,
@@ -36,7 +44,9 @@ export const Menu = ({
   handleClickResetChatLog,
   handleClickResetSystemPrompt,
   onChangeKoeiromapKey,
+  locale = 'en',
 }: Props) => {
+  const t = i18nMessages[locale as keyof typeof i18nMessages].menu;
   const [showSettings, setShowSettings] = useState(false);
   const [showChatLog, setShowChatLog] = useState(false);
   const { viewer } = useContext(ViewerContext);
@@ -98,32 +108,42 @@ export const Menu = ({
     [viewer]
   );
 
-  return (
+return (
     <>
-      <div className="absolute z-10 m-24">
-        <div className="grid grid-flow-col gap-[8px]">
+      <div className="absolute z-50 m-24">
+<div className="grid grid-flow-col gap-[8px]">
           <IconButton
             iconName="24/Menu"
-            label="設定"
+            label={t.settings}
             isProcessing={false}
             onClick={() => setShowSettings(true)}
           ></IconButton>
           {showChatLog ? (
             <IconButton
               iconName="24/CommentOutline"
-              label="会話ログ"
+              label={t.chatLog}
               isProcessing={false}
               onClick={() => setShowChatLog(false)}
             />
           ) : (
             <IconButton
               iconName="24/CommentFill"
-              label="会話ログ"
+              label={t.chatLog}
               isProcessing={false}
               disabled={chatLog.length <= 0}
               onClick={() => setShowChatLog(true)}
             />
           )}
+          <button
+            onClick={() => {
+              const nextLocale = locale === 'en' ? 'zh' : locale === 'zh' ? 'ja' : 'en';
+              document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000`;
+              location.reload();
+            }}
+            className="bg-primary hover:bg-primary-hover active:bg-primary-press text-white rounded-16 text-sm p-8 text-center inline-flex items-center mr-2"
+          >
+            <div className="mr-2 font-bold">{locale === 'en' ? 'EN' : locale === 'zh' ? '中' : '日'}</div>
+          </button>
         </div>
       </div>
       {showChatLog && <ChatLog messages={chatLog} />}

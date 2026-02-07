@@ -15,9 +15,31 @@ import { Introduction } from "@/components/introduction";
 import { Menu } from "@/components/menu";
 import { GitHubLink } from "@/components/githubLink";
 import { Meta } from "@/components/meta";
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/router';
+import enMessages from '@/i18n/locales/en.json';
+import zhMessages from '@/i18n/locales/zh.json';
+
+const i18nMessages = {
+  en: enMessages,
+  zh: zhMessages,
+};
 
 export default function Home() {
+  const router = useRouter();
+  const [locale, setLocale] = useState('en');
+  const t = locale === 'en'
+    ? i18nMessages.en.index
+    : i18nMessages.zh.index;
   const { viewer } = useContext(ViewerContext);
+
+  useEffect(() => {
+    const savedLocale = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('NEXT_LOCALE='))
+      ?.split('=')[1] || 'en';
+    setLocale(savedLocale);
+  }, []);
 
 const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
   const [openAiKey, setOpenAiKey] = useState("");
@@ -58,8 +80,8 @@ const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
     [chatLog]
   );
 
-  /**
-   * 文ごとに音声を直列でリクエストしながら再生する
+/**
+   * Generate and play audio for each sentence in sequence
    */
   const handleSpeakAi = useCallback(
     async (
@@ -72,13 +94,13 @@ const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
     [viewer, dashscopeKey]
   );
 
-  /**
-   * アシスタントとの会話を行う
+/**
+   * Conduct conversation with the assistant
    */
-  const handleSendChat = useCallback(
+const handleSendChat = useCallback(
     async (text: string) => {
       if (!openAiKey) {
-        setAssistantMessage("APIキーが入力されていません");
+        setAssistantMessage(i18nMessages[locale as keyof typeof i18nMessages].index.noApiKey);
         return;
       }
 
@@ -86,15 +108,15 @@ const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
 
       if (newMessage == null) return;
 
-      setChatProcessing(true);
-      // ユーザーの発言を追加して表示
+setChatProcessing(true);
+      // Add and display user's message
       const messageLog: Message[] = [
         ...chatLog,
         { role: "user", content: newMessage },
       ];
-      setChatLog(messageLog);
+setChatLog(messageLog);
 
-      // Chat GPTへ
+      // Send to ChatGPT
       const messages: Message[] = [
         {
           role: "system",
@@ -124,16 +146,16 @@ const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
           const { done, value } = await reader.read();
           if (done) break;
 
-          receivedMessage += value;
+receivedMessage += value;
 
-          // 返答内容のタグ部分の検出
+          // Detect tag part in response content
           const tagMatch = receivedMessage.match(/^\[(.*?)\]/);
           if (tagMatch && tagMatch[0]) {
             tag = tagMatch[0];
-            receivedMessage = receivedMessage.slice(tag.length);
+receivedMessage = receivedMessage.slice(tag.length);
           }
 
-          // 返答を一文単位で切り出して処理する
+          // Extract and process response sentence by sentence
           const sentenceMatch = receivedMessage.match(
             /^(.+[。．！？\n]|.{10,}[、,])/
           );
@@ -142,9 +164,9 @@ const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
             sentences.push(sentence);
             receivedMessage = receivedMessage
               .slice(sentence.length)
-              .trimStart();
+.trimStart();
 
-            // 発話不要/不可能な文字列だった場合はスキップ
+            // Skip if string is not needed/cannot be spoken
             if (
               !sentence.replace(
                 /^[\s\[\(\{「［（【『〈《〔｛«‹〘〚〛〙›»〕》〉』】）］」\}\)\]]+$/g,
@@ -155,10 +177,10 @@ const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
             }
 
             const aiText = `${tag} ${sentence}`;
-            const aiTalks = textsToScreenplay([aiText], koeiroParam);
+const aiTalks = textsToScreenplay([aiText], koeiroParam);
             aiTextLog += aiText;
 
-            // 文ごとに音声を生成 & 再生、返答を表示
+            // Generate and play audio for each sentence, display response
             const currentAssistantMessage = sentences.join(" ");
             handleSpeakAi(aiTalks[0], () => {
               setAssistantMessage(currentAssistantMessage);
@@ -169,36 +191,37 @@ const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
         setChatProcessing(false);
         console.error(e);
       } finally {
-        reader.releaseLock();
+reader.releaseLock();
       }
 
-      // アシスタントの返答をログに追加
+      // Add assistant's response to log
       const messageLogAssistant: Message[] = [
         ...messageLog,
         { role: "assistant", content: aiTextLog },
       ];
 
       setChatLog(messageLogAssistant);
-      setChatProcessing(false);
+setChatProcessing(false);
     },
-    [systemPrompt, chatLog, handleSpeakAi, openAiKey, koeiroParam]
+    [systemPrompt, chatLog, handleSpeakAi, openAiKey, koeiroParam, t]
   );
 
-  return (
+return (
     <div className={"font-M_PLUS_2"}>
       <Meta />
-<Introduction
+      <Introduction
         openAiKey={openAiKey}
         koeiroMapKey={dashscopeKey}
         onChangeAiKey={setOpenAiKey}
         onChangeKoeiromapKey={setDashscopeKey}
+        locale={locale}
       />
       <VrmViewer />
       <MessageInputContainer
         isChatProcessing={chatProcessing}
         onChatProcessStart={handleSendChat}
       />
-<Menu
+      <Menu
         openAiKey={openAiKey}
         systemPrompt={systemPrompt}
         chatLog={chatLog}
@@ -212,6 +235,7 @@ const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
         handleClickResetChatLog={() => setChatLog([])}
         handleClickResetSystemPrompt={() => setSystemPrompt(SYSTEM_PROMPT)}
         onChangeKoeiromapKey={setDashscopeKey}
+        locale={locale}
       />
       <GitHubLink />
     </div>

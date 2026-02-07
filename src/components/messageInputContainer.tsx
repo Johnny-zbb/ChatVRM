@@ -54,9 +54,19 @@ export const MessageInputContainer = ({
     setIsMicRecording(true);
   }, [isMicRecording, speechRecognition]);
 
-  const handleClickSendButton = useCallback(() => {
+const handleClickSendButton = useCallback(() => {
     onChatProcessStart(userMessage);
   }, [onChatProcessStart, userMessage]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter" && !event.shiftKey && userMessage.trim()) {
+        event.preventDefault();
+        onChatProcessStart(userMessage);
+      }
+    },
+    [onChatProcessStart, userMessage]
+  );
 
   useEffect(() => {
     const SpeechRecognition =
@@ -83,7 +93,7 @@ export const MessageInputContainer = ({
     }
   }, [isChatProcessing]);
 
-  return (
+return (
     <MessageInput
       userMessage={userMessage}
       isChatProcessing={isChatProcessing}
@@ -91,6 +101,7 @@ export const MessageInputContainer = ({
       onChangeUserMessage={(e) => setUserMessage(e.target.value)}
       onClickMicButton={handleClickMicButton}
       onClickSendButton={handleClickSendButton}
+      onKeyDown={handleKeyDown}
     />
   );
 };

@@ -8,7 +8,7 @@ import { EmoteController } from "../emoteController/emoteController";
 import { Screenplay } from "../messages/messages";
 
 /**
- * 3Dキャラクターを管理するクラス
+ * Class to manage 3D character
  */
 export class Model {
   public vrm?: VRM | null;
@@ -48,10 +48,10 @@ export class Model {
       VRMUtils.deepDispose(this.vrm.scene);
       this.vrm = null;
     }
-  }
+}
 
   /**
-   * VRMアニメーションを読み込む
+   * Load VRM animation
    *
    * https://github.com/vrm-c/vrm-specification/blob/master/specification/VRMC_vrm_animation-1.0/README.ja.md
    */
@@ -64,10 +64,10 @@ export class Model {
     const clip = vrmAnimation.createAnimationClip(vrm);
     const action = mixer.clipAction(clip);
     action.play();
-  }
+}
 
   /**
-   * 音声を再生し、リップシンクを行う
+   * Play audio and perform lip sync
    */
   public async speak(buffer: ArrayBuffer, screenplay: Screenplay) {
     this.emoteController?.playEmotion(screenplay.expression);

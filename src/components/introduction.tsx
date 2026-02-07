@@ -1,19 +1,30 @@
 import { useState, useCallback } from "react";
 import { Link } from "./link";
+import enMessages from '@/i18n/locales/en.json';
+import zhMessages from '@/i18n/locales/zh.json';
+
+const i18nMessages = {
+  en: enMessages,
+  zh: zhMessages,
+};
 
 type Props = {
   openAiKey: string;
   koeiroMapKey: string;
   onChangeAiKey: (openAiKey: string) => void;
   onChangeKoeiromapKey: (koeiromapKey: string) => void;
+  locale?: string;
 };
+
 export const Introduction = ({
   openAiKey,
   koeiroMapKey,
   onChangeAiKey,
   onChangeKoeiromapKey,
+  locale = 'en',
 }: Props) => {
   const [opened, setOpened] = useState(true);
+  const t = i18nMessages[locale as keyof typeof i18nMessages].introduction;
 
   const handleAiKeyChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,54 +40,54 @@ export const Introduction = ({
     [onChangeKoeiromapKey]
   );
 
-  return opened ? (
+return opened ? (
     <div className="absolute z-40 w-full h-full px-24 py-40  bg-black/30 font-M_PLUS_2">
-      <div className="mx-auto my-auto max-w-3xl max-h-full p-24 overflow-auto bg-white rounded-16">
+<div className="mx-auto my-auto max-w-3xl max-h-full p-24 overflow-auto bg-white rounded-16">
         <div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary ">
-            このアプリケーションについて
+            {t.title}
           </div>
           <div>
-            Webブラウザだけで3Dキャラクターとの会話を、マイクやテキスト入力、音声合成を用いて楽しめます。キャラクター（VRM）の変更や性格設定、音声調整もできます。
+            {t.description}
           </div>
         </div>
         <div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary">
-            技術紹介
+            {t.techIntro.title}
           </div>
           <div>
-            3Dモデルの表示や操作には
+            {t.techIntro.description}
             <Link
               url={"https://github.com/pixiv/three-vrm"}
-              label={"@pixiv/three-vrm"}
+              label={t.techIntro.vrmLibrary}
             />
-            、 会話文生成には
+            {t.techIntro.forConversation}
             <Link
               url={
                 "https://openai.com/blog/introducing-chatgpt-and-whisper-apis"
               }
-              label={"ChatGPT API"}
+              label={t.techIntro.chatGPT}
             />
-、 音声合成には
-            <Link url={"https://www.aliyun.com/product/dashscope"} label={"通义千问"} />
-            の
+            {t.techIntro.forVoice}
+            <Link url={"https://www.aliyun.com/product/dashscope"} label={t.techIntro.tongyi} />
+            {t.techIntro.ttsApi}
             <Link
               url={
                 "https://help.aliyun.com/zh/dashscope/developer-reference/quick-start"
               }
-              label={"TTS API"}
+              label={t.techIntro.from}
             />
-            を使用しています。 詳細はこちらの
+            {t.techIntro.details}
             <Link
               url={"https://inside.pixiv.blog/2023/04/28/160000"}
-              label={"技術解説記事"}
+              label={t.techIntro.techArticle}
             />
-            をご覧ください。
+            {t.techIntro.forDetails}
           </div>
           <div className="my-16">
-            このデモはGitHubでソースコードを公開しています。自由に変更や改変をお試しください！
+            {t.techIntro.githubDesc}
             <br />
-            リポジトリ：
+            {t.techIntro.repository}
             <Link
               url={"https://github.com/pixiv/ChatVRM"}
               label={"https://github.com/pixiv/ChatVRM"}
@@ -86,71 +97,70 @@ export const Introduction = ({
 
         <div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary">
-            利用上の注意
+            {t.usageNotes.title}
           </div>
           <div>
-            差別的または暴力的な発言、特定の人物を貶めるような発言を、意図的に誘導しないでください。また、VRMモデルを使ってキャラクターを差し替える際はモデルの利用条件に従ってください。
+            {t.usageNotes.description}
           </div>
         </div>
 
 <div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary">
-            通义千問 APIキー
+            {t.dashscopeApiKey.title}
           </div>
           <input
             type="text"
-            placeholder="sk-..."
+            placeholder={t.dashscopeApiKey.placeholder}
             value={koeiroMapKey}
             onChange={handleKoeiromapKeyChange}
             className="my-4 px-16 py-8 w-full h-40 bg-surface3 hover:bg-surface3-hover rounded-4 text-ellipsis"
           ></input>
           <div>
-            APIキーは
+            {t.dashscopeApiKey.getFrom}
             <Link
-              url="https://dashscope.console.aliyun.com/apiKey"
-              label="阿里云DashScopeコンソール"
+              url={t.dashscopeApiKey.consoleUrl}
+              label={t.dashscopeApiKey.console}
             />
-            から発行してください。
+            {t.dashscopeApiKey.forDetails}
             <Link
-              url="https://help.aliyun.com/zh/dashscope/developer-reference/quick-start"
-              label="詳細はこちら"
+              url={t.dashscopeApiKey.detailsUrl}
+              label={t.dashscopeApiKey.detailsLink}
             />
           </div>
         </div>
         <div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary">
-            OpenAI APIキー
+            {t.openaiApiKey.title}
           </div>
           <input
             type="text"
-            placeholder="sk-..."
+            placeholder={t.openaiApiKey.placeholder}
             value={openAiKey}
             onChange={handleAiKeyChange}
             className="my-4 px-16 py-8 w-full h-40 bg-surface3 hover:bg-surface3-hover rounded-4 text-ellipsis"
           ></input>
           <div>
-            APIキーは
+            {t.openaiApiKey.getFrom}
             <Link
-              url="https://platform.openai.com/account/api-keys"
-              label="OpenAIのサイト"
+              url={t.openaiApiKey.platformUrl}
+              label={t.openaiApiKey.openaiSite}
             />
-            で取得できます。取得したAPIキーをフォームに入力してください。
+            {t.openaiApiKey.enterKey}
           </div>
           <div className="my-16">
-            ChatGPT
-            APIはブラウザから直接アクセスしています。また、APIキーや会話内容はピクシブのサーバには保存されません。
+            {t.openaiApiKey.directAccess}
             <br />
-            ※利用しているモデルはChatGPT API (GPT-3.5)です。
+            {t.openaiApiKey.modelNote}
           </div>
         </div>
-        <div className="my-24">
+<div className="my-24">
           <button
             onClick={() => {
               setOpened(false);
             }}
             className="font-bold bg-secondary hover:bg-secondary-hover active:bg-secondary-press disabled:bg-secondary-disabled text-white px-24 py-8 rounded-oval"
           >
-            APIキーを入力してはじめる
+            {t.startButton}
           </button>
         </div>
       </div>

@@ -10,6 +10,13 @@ import {
   PRESET_D,
 } from "@/features/constants/koeiroParam";
 import { Link } from "./link";
+import enMessages from '@/i18n/locales/en.json';
+import zhMessages from '@/i18n/locales/zh.json';
+
+const i18nMessages = {
+  en: enMessages,
+  zh: zhMessages,
+};
 
 type Props = {
   openAiKey: string;
@@ -26,6 +33,7 @@ type Props = {
   onClickResetChatLog: () => void;
   onClickResetSystemPrompt: () => void;
   onChangeKoeiromapKey: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  locale?: string;
 };
 export const Settings = ({
   openAiKey,
@@ -42,10 +50,12 @@ export const Settings = ({
   onClickResetChatLog,
   onClickResetSystemPrompt,
   onChangeKoeiromapKey,
+  locale = 'en',
 }: Props) => {
-  return (
-    <div className="absolute z-40 w-full h-full bg-white/80 backdrop-blur ">
-      <div className="absolute m-24">
+  const t = i18nMessages[locale as keyof typeof i18nMessages].settings;
+return (
+    <div className="absolute z-30 w-full h-full bg-white/80 backdrop-blur">
+      <div className="absolute m-24 z-40">
         <IconButton
           iconName="24/Close"
           isProcessing={false}
@@ -53,10 +63,10 @@ export const Settings = ({
         ></IconButton>
       </div>
       <div className="max-h-full overflow-auto">
-        <div className="text-text1 max-w-3xl mx-auto px-24 py-64 ">
-          <div className="my-24 typography-32 font-bold">設定</div>
+<div className="text-text1 max-w-3xl mx-auto px-24 py-64 ">
+          <div className="my-24 typography-32 font-bold">{t.title}</div>
           <div className="my-24">
-            <div className="my-16 typography-20 font-bold">OpenAI API キー</div>
+            <div className="my-16 typography-20 font-bold">{t.openaiApiKey.title}</div>
             <input
               className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
               type="text"

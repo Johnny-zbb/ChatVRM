@@ -1,4 +1,11 @@
 import { IconButton } from "./iconButton";
+import enMessages from '@/i18n/locales/en.json';
+import zhMessages from '@/i18n/locales/zh.json';
+
+const i18nMessages = {
+  en: enMessages,
+  zh: zhMessages,
+};
 
 type Props = {
   userMessage: string;
@@ -9,6 +16,8 @@ type Props = {
   ) => void;
   onClickSendButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onClickMicButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  locale?: string;
 };
 export const MessageInput = ({
   userMessage,
@@ -17,7 +26,11 @@ export const MessageInput = ({
   onChangeUserMessage,
   onClickMicButton,
   onClickSendButton,
+  onKeyDown,
+  locale = 'en',
 }: Props) => {
+  const t = i18nMessages[locale as keyof typeof i18nMessages].messageInput;
+
   return (
     <div className="absolute bottom-0 z-20 w-screen">
       <div className="bg-base text-black">
@@ -32,8 +45,9 @@ export const MessageInput = ({
             />
             <input
               type="text"
-              placeholder="聞きたいことをいれてね"
+              placeholder={t.placeholder}
               onChange={onChangeUserMessage}
+              onKeyDown={onKeyDown}
               disabled={isChatProcessing}
               className="bg-surface1 hover:bg-surface1-hover focus:bg-surface1 disabled:bg-surface1-disabled disabled:text-primary-disabled rounded-16 w-full px-16 text-text-primary typography-16 font-bold disabled"
               value={userMessage}
