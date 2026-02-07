@@ -57,14 +57,14 @@ export const Introduction = ({
               }
               label={"ChatGPT API"}
             />
-            、 音声合成には
-            <Link url={"https://koemotion.rinna.co.jp/"} label={"Koemotion"} />
+、 音声合成には
+            <Link url={"https://www.aliyun.com/product/dashscope"} label={"通义千问"} />
             の
             <Link
               url={
-                "https://developers.rinna.co.jp/product/#product=koeiromap-free"
+                "https://help.aliyun.com/zh/dashscope/developer-reference/quick-start"
               }
-              label={"Koeiromap API"}
+              label={"TTS API"}
             />
             を使用しています。 詳細はこちらの
             <Link
@@ -93,21 +93,26 @@ export const Introduction = ({
           </div>
         </div>
 
-        <div className="my-24">
+<div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary">
-            Koeiromap APIキー
+            通义千問 APIキー
           </div>
           <input
             type="text"
-            placeholder="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+            placeholder="sk-..."
             value={koeiroMapKey}
             onChange={handleKoeiromapKeyChange}
             className="my-4 px-16 py-8 w-full h-40 bg-surface3 hover:bg-surface3-hover rounded-4 text-ellipsis"
           ></input>
           <div>
-            APIキーはrinna Developersから発行してください。
+            APIキーは
             <Link
-              url="https://developers.rinna.co.jp/product/#product=koeiromap-free"
+              url="https://dashscope.console.aliyun.com/apiKey"
+              label="阿里云DashScopeコンソール"
+            />
+            から発行してください。
+            <Link
+              url="https://help.aliyun.com/zh/dashscope/developer-reference/quick-start"
               label="詳細はこちら"
             />
           </div>

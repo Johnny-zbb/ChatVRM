@@ -51,20 +51,28 @@ export const fetchAudio = async (
   talk: Talk,
   apiKey: string
 ): Promise<ArrayBuffer> => {
-  const ttsVoice = await synthesizeVoiceApi(
-    talk.message,
-    talk.speakerX,
-    talk.speakerY,
-    talk.style,
-    apiKey
-  );
-  const url = ttsVoice.audio;
+  try {
+    const ttsResponse = await synthesizeVoiceApi(
+      talk.message,
+      talk.speakerX,
+      talk.speakerY,
+      talk.style,
+      apiKey
+    );
+    
+    if (!ttsResponse || !ttsResponse.audio) {
+      throw new Error("No audio URL returned from TTS service");
+    }
 
-  if (url == null) {
-    throw new Error("Something went wrong");
+    const resAudio = await fetch(ttsResponse.audio);
+    if (!resAudio.ok) {
+      throw new Error(`HTTP error! status: ${resAudio.status}`);
+    }
+    
+    const buffer = await resAudio.arrayBuffer();
+    return buffer;
+  } catch (error) {
+    console.error('Error in fetchAudio:', error);
+    throw error;
   }
-
-  const resAudio = await fetch(url);
-  const buffer = await resAudio.arrayBuffer();
-  return buffer;
 };

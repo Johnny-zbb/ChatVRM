@@ -8,15 +8,14 @@ export async function getChatResponse(messages: Message[], apiKey: string) {
 
   const configuration = new Configuration({
     apiKey: apiKey,
+    basePath: process.env.NEXT_PUBLIC_OPENAI_BASE_URL || undefined,
   });
-  // ブラウザからAPIを叩くときに発生するエラーを無くすworkaround
-  // https://github.com/openai/openai-node/issues/6#issuecomment-1492814621
   delete configuration.baseOptions.headers["User-Agent"];
 
   const openai = new OpenAIApi(configuration);
 
   const { data } = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
+    model: process.env.NEXT_PUBLIC_OPENAI_MODEL || "gpt-3.5-turbo",
     messages: messages,
   });
 
@@ -38,16 +37,19 @@ export async function getChatResponseStream(
     "Content-Type": "application/json",
     Authorization: `Bearer ${apiKey}`,
   };
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    headers: headers,
-    method: "POST",
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: messages,
-      stream: true,
-      max_tokens: 200,
-    }),
-  });
+  const res = await fetch(
+    process.env.NEXT_PUBLIC_OPENAI_BASE_URL || "https://api.openai.com/v1/chat/completions",
+    {
+      headers: headers,
+      method: "POST",
+      body: JSON.stringify({
+        model: process.env.NEXT_PUBLIC_OPENAI_MODEL || "gpt-3.5-turbo",
+        messages: messages,
+        stream: true,
+        max_tokens: 200,
+      }),
+    }
+  );
 
   const reader = res.body?.getReader();
   if (res.status !== 200 || !reader) {
