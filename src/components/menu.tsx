@@ -20,14 +20,12 @@ type Props = {
   chatLog: Message[];
   koeiroParam: KoeiroParam;
   assistantMessage: string;
-  koeiromapKey: string;
   onChangeSystemPrompt: (systemPrompt: string) => void;
   onChangeAiKey: (key: string) => void;
   onChangeChatLog: (index: number, text: string) => void;
   onChangeKoeiromapParam: (param: KoeiroParam) => void;
   handleClickResetChatLog: () => void;
   handleClickResetSystemPrompt: () => void;
-  onChangeKoeiromapKey: (key: string) => void;
   locale?: string;
 };
 export const Menu = ({
@@ -36,14 +34,12 @@ export const Menu = ({
   chatLog,
   koeiroParam,
   assistantMessage,
-  koeiromapKey,
   onChangeSystemPrompt,
   onChangeAiKey,
   onChangeChatLog,
   onChangeKoeiromapParam,
   handleClickResetChatLog,
   handleClickResetSystemPrompt,
-  onChangeKoeiromapKey,
   locale = 'en',
 }: Props) => {
   const t = i18nMessages[locale as keyof typeof i18nMessages].menu;
@@ -64,13 +60,6 @@ export const Menu = ({
       onChangeAiKey(event.target.value);
     },
     [onChangeAiKey]
-  );
-
-  const handleChangeKoeiromapKey = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChangeKoeiromapKey(event.target.value);
-    },
-    [onChangeKoeiromapKey]
   );
 
   const handleChangeKoeiroParam = useCallback(
@@ -136,13 +125,13 @@ return (
           )}
           <button
             onClick={() => {
-              const nextLocale = locale === 'en' ? 'zh' : locale === 'zh' ? 'ja' : 'en';
+              const nextLocale = locale === 'en' ? 'zh' : 'en';
               document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000`;
               location.reload();
             }}
             className="bg-primary hover:bg-primary-hover active:bg-primary-press text-white rounded-16 text-sm p-8 text-center inline-flex items-center mr-2"
           >
-            <div className="mr-2 font-bold">{locale === 'en' ? 'EN' : locale === 'zh' ? '中' : '日'}</div>
+            <div className="mr-2 font-bold">{locale === 'en' ? 'EN' : '中'}</div>
           </button>
         </div>
       </div>
@@ -153,7 +142,6 @@ return (
           chatLog={chatLog}
           systemPrompt={systemPrompt}
           koeiroParam={koeiroParam}
-          koeiromapKey={koeiromapKey}
           onClickClose={() => setShowSettings(false)}
           onChangeAiKey={handleAiKeyChange}
           onChangeSystemPrompt={handleChangeSystemPrompt}
@@ -162,7 +150,7 @@ return (
           onClickOpenVrmFile={handleClickOpenVrmFile}
           onClickResetChatLog={handleClickResetChatLog}
           onClickResetSystemPrompt={handleClickResetSystemPrompt}
-          onChangeKoeiromapKey={handleChangeKoeiromapKey}
+          locale={locale}
         />
       )}
       {!showChatLog && assistantMessage && (

@@ -29,8 +29,8 @@ module.exports = {
         "text-primary": "#514062",
       },
       fontFamily: {
-        M_PLUS_2: ["Montserrat", "M_PLUS_2", "sans-serif"],
-        Montserrat: ["Montserrat", "sans-serif"],
+        M_PLUS_2: ["'Noto Sans SC'", "'PingFang SC'", "'Microsoft YaHei'", "sans-serif"],
+        Montserrat: ["'Noto Sans SC'", "'PingFang SC'", "'Microsoft YaHei'", "sans-serif"],
       },
     },
   },

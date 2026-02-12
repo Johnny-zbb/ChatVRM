@@ -1,24 +1,31 @@
-import { reduceTalkStyle } from "@/utils/reduceTalkStyle";
-import { getTongyiTTSResponse } from "../tongyi/tts";
-import { TalkStyle } from "../messages/messages";
+import { TalkStyle, EmotionType } from "../messages/messages";
+import { speakWithEmotion } from "../webSpeechTts/webSpeechTts";
 
-// Removed unused synthesizeVoice function as it was replaced by Tongyi Qianwen TTS implementation
-
-export async function synthesizeVoiceApi(
+/**
+ * 语音合成 API - 使用 Web Speech API（免费，无需 API 密钥）
+ */
+export function synthesizeVoiceApi(
   message: string,
   speakerX: number,
   speakerY: number,
   style: TalkStyle,
-  apiKey: string
+  apiKey: string,
+  emotion: EmotionType = "neutral",
+  lang: string = 'zh-CN',
+  onStart?: () => void,
+  onEnd?: () => void,
+  onError?: (error: Error) => void
 ) {
-  // Limit emotions for Free tier
-  const reducedStyle = reduceTalkStyle(style);
-
-  try {
-    const response = await getTongyiTTSResponse(message, apiKey);
-    return { audio: response.audio };
-  } catch (error) {
-    console.error('Error calling Tongyi TTS API:', error);
-    throw new Error('Failed to generate speech with Tongyi TTS');
-  }
+  // 使用 Web Speech API 播放语音
+  speakWithEmotion(
+    message,
+    emotion,
+    lang,
+    onStart,
+    onEnd,
+    onError
+  );
+  
+  // 返回空对象以保持接口兼容性
+  return { audio: "" };
 }

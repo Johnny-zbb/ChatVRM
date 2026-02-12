@@ -10,17 +10,13 @@ const i18nMessages = {
 
 type Props = {
   openAiKey: string;
-  koeiroMapKey: string;
   onChangeAiKey: (openAiKey: string) => void;
-  onChangeKoeiromapKey: (koeiromapKey: string) => void;
   locale?: string;
 };
 
 export const Introduction = ({
   openAiKey,
-  koeiroMapKey,
   onChangeAiKey,
-  onChangeKoeiromapKey,
   locale = 'en',
 }: Props) => {
   const [opened, setOpened] = useState(true);
@@ -31,13 +27,6 @@ export const Introduction = ({
       onChangeAiKey(event.target.value);
     },
     [onChangeAiKey]
-  );
-
-  const handleKoeiromapKeyChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChangeKoeiromapKey(event.target.value);
-    },
-    [onChangeKoeiromapKey]
   );
 
 return opened ? (
@@ -69,13 +58,9 @@ return opened ? (
               label={t.techIntro.chatGPT}
             />
             {t.techIntro.forVoice}
-            <Link url={"https://www.aliyun.com/product/dashscope"} label={t.techIntro.tongyi} />
-            {t.techIntro.ttsApi}
             <Link
-              url={
-                "https://help.aliyun.com/zh/dashscope/developer-reference/quick-start"
-              }
-              label={t.techIntro.from}
+              url={"https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API"}
+              label={t.techIntro.webSpeechApi}
             />
             {t.techIntro.details}
             <Link
@@ -104,30 +89,6 @@ return opened ? (
           </div>
         </div>
 
-<div className="my-24">
-          <div className="my-8 font-bold typography-20 text-secondary">
-            {t.dashscopeApiKey.title}
-          </div>
-          <input
-            type="text"
-            placeholder={t.dashscopeApiKey.placeholder}
-            value={koeiroMapKey}
-            onChange={handleKoeiromapKeyChange}
-            className="my-4 px-16 py-8 w-full h-40 bg-surface3 hover:bg-surface3-hover rounded-4 text-ellipsis"
-          ></input>
-          <div>
-            {t.dashscopeApiKey.getFrom}
-            <Link
-              url={t.dashscopeApiKey.consoleUrl}
-              label={t.dashscopeApiKey.console}
-            />
-            {t.dashscopeApiKey.forDetails}
-            <Link
-              url={t.dashscopeApiKey.detailsUrl}
-              label={t.dashscopeApiKey.detailsLink}
-            />
-          </div>
-        </div>
         <div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary">
             {t.openaiApiKey.title}
