@@ -140,9 +140,11 @@ src/
 ### 环境变量
 将 API 密钥存储在环境变量中:
 - `OPEN_AI_KEY`: OpenAI 访问密钥（用于 GPT-3.5）
-- `DASHSCOPE_API_KEY`: 阿里云通义千问 API 密钥（用于 TTS）
+- `DASHSCOPE_API_KEY`: 阿里云通义千问 API 密钥（用于 TTS，可选）
 - `DASHSCOPE_API_BASE_URL`: 通义千问 API 基础 URL（可选）
 - `BASE_PATH`: 应用程序基础路径（用于部署）
+
+**注意**: 本项目从浏览器直接访问 API，API 密钥存储在浏览器的 localStorage 中，而非环境变量。用户需要在应用的设置页面中输入 API 密钥。
 
 ### API 路由
 - `/api/chat`: 处理与 OpenAI 的聊天请求

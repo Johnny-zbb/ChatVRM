@@ -27,7 +27,7 @@ export async function getChatResponse(messages: Message[], apiKey: string) {
     thinking: {
       type: "disabled"
     }
-  });
+  } as any);
 
   const [aiRes] = data.choices;
   const message = aiRes.message?.content || "エラーが発生しました";

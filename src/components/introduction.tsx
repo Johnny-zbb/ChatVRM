@@ -10,13 +10,17 @@ const i18nMessages = {
 
 type Props = {
   openAiKey: string;
+  dashscopeApiKey: string;
   onChangeAiKey: (openAiKey: string) => void;
+  onChangeDashscopeApiKey: (dashscopeApiKey: string) => void;
   locale?: string;
 };
 
 export const Introduction = ({
   openAiKey,
+  dashscopeApiKey,
   onChangeAiKey,
+  onChangeDashscopeApiKey,
   locale = 'en',
 }: Props) => {
   const [opened, setOpened] = useState(true);
@@ -29,8 +33,15 @@ export const Introduction = ({
     [onChangeAiKey]
   );
 
+  const handleDashscopeApiKeyChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChangeDashscopeApiKey(event.target.value);
+    },
+    [onChangeDashscopeApiKey]
+  );
+
 return opened ? (
-    <div className="absolute z-40 w-full h-full px-24 py-40  bg-black/30 font-M_PLUS_2">
+    <div className="absolute z-[70] w-full h-full px-24 py-40  bg-black/30 font-M_PLUS_2">
 <div className="mx-auto my-auto max-w-3xl max-h-full p-24 overflow-auto bg-white rounded-16">
         <div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary ">
@@ -112,6 +123,31 @@ return opened ? (
             {t.openaiApiKey.directAccess}
             <br />
             {t.openaiApiKey.modelNote}
+          </div>
+        </div>
+        <div className="my-24">
+          <div className="my-8 font-bold typography-20 text-secondary">
+            {t.dashscopeApiKey.title}
+          </div>
+          <input
+            type="text"
+            placeholder={t.dashscopeApiKey.placeholder}
+            value={dashscopeApiKey}
+            onChange={handleDashscopeApiKeyChange}
+            className="my-4 px-16 py-8 w-full h-40 bg-surface3 hover:bg-surface3-hover rounded-4 text-ellipsis"
+          ></input>
+          <div>
+            {t.dashscopeApiKey.getFrom}
+            <Link
+              url={t.dashscopeApiKey.platformUrl}
+              label={t.dashscopeApiKey.dashscopeSite}
+            />
+            {t.dashscopeApiKey.enterKey}
+          </div>
+          <div className="my-16">
+            {t.dashscopeApiKey.description}
+            <br />
+            {t.dashscopeApiKey.optional}
           </div>
         </div>
 <div className="my-24">

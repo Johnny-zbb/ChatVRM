@@ -9,8 +9,6 @@ import { Screenplay } from "./messages";
 export const speakCharacter = (
   screenplay: Screenplay,
   viewer: Viewer,
-  koeiroApiKey: string = "",
-  microsoftTtsOptions?: any,
   onStart?: () => void,
   onComplete?: () => void
 ) => {
@@ -20,10 +18,7 @@ export const speakCharacter = (
   // 使用 Web Speech API 播放语音
   synthesizeVoiceApi(
     screenplay.talk.message,
-    screenplay.talk.speakerX,
-    screenplay.talk.speakerY,
     screenplay.talk.style,
-    koeiroApiKey,
     screenplay.expression,
     lang,
     onStart,
@@ -34,7 +29,7 @@ export const speakCharacter = (
   );
   
   // 如果有 VRM 模型，仍然播放表情动画
-  if (viewer.model && screenplay.expression) {
-    viewer.model.emotion = screenplay.expression;
+  if (viewer.model && viewer.model.emoteController && screenplay.expression) {
+    viewer.model.emoteController.playEmotion(screenplay.expression);
   }
 };

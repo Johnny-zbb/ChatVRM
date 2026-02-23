@@ -2,13 +2,6 @@ import React from "react";
 import { IconButton } from "./iconButton";
 import { TextButton } from "./textButton";
 import { Message } from "@/features/messages/messages";
-import {
-  KoeiroParam,
-  PRESET_A,
-  PRESET_B,
-  PRESET_C,
-  PRESET_D,
-} from "@/features/constants/koeiroParam";
 import { Link } from "./link";
 import enMessages from '@/i18n/locales/en.json';
 import zhMessages from '@/i18n/locales/zh.json';
@@ -20,14 +13,16 @@ const i18nMessages = {
 
 type Props = {
   openAiKey: string;
+  dashscopeApiKey: string;
+  ttsModel: string;
   systemPrompt: string;
   chatLog: Message[];
-  koeiroParam: KoeiroParam;
   onClickClose: () => void;
   onChangeAiKey: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeDashscopeApiKey: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeTtsModel: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeSystemPrompt: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onChangeChatLog: (index: number, text: string) => void;
-  onChangeKoeiroParam: (x: number, y: number) => void;
   onClickOpenVrmFile: () => void;
   onClickResetChatLog: () => void;
   onClickResetSystemPrompt: () => void;
@@ -35,14 +30,16 @@ type Props = {
 };
 export const Settings = ({
   openAiKey,
+  dashscopeApiKey,
+  ttsModel,
   chatLog,
   systemPrompt,
-  koeiroParam,
   onClickClose,
   onChangeSystemPrompt,
   onChangeAiKey,
+  onChangeDashscopeApiKey,
+  onChangeTtsModel,
   onChangeChatLog,
-  onChangeKoeiroParam,
   onClickOpenVrmFile,
   onClickResetChatLog,
   onClickResetSystemPrompt,
@@ -86,6 +83,44 @@ return (
               {t.openaiApiKey.directAccess}
               <br />
               {t.openaiApiKey.modelNote}
+            </div>
+          </div>
+          <div className="my-24">
+            <div className="my-16 typography-20 font-bold">{t.dashscopeApiKey.title}</div>
+            <input
+              className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+              type="text"
+              placeholder={t.dashscopeApiKey.placeholder}
+              value={dashscopeApiKey}
+              onChange={onChangeDashscopeApiKey}
+            />
+            <div>
+              {t.dashscopeApiKey.getFrom}
+              <Link
+                url={t.dashscopeApiKey.platformUrl}
+                label={t.dashscopeApiKey.dashscopeSite}
+              />
+              {t.dashscopeApiKey.enterKey}
+            </div>
+            <div className="my-16">
+              {t.dashscopeApiKey.description}
+              <br />
+              {t.dashscopeApiKey.optional}
+            </div>
+          </div>
+          <div className="my-24">
+            <div className="my-16 typography-20 font-bold">{t.ttsModel.title}</div>
+            <input
+              className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+              type="text"
+              placeholder={t.ttsModel.placeholder}
+              value={ttsModel}
+              onChange={onChangeTtsModel}
+            />
+            <div className="my-16">
+              {t.ttsModel.description}
+              <br />
+              {t.ttsModel.optional}
             </div>
           </div>
           <div className="my-40">

@@ -1,6 +1,5 @@
 import { IconButton } from "./iconButton";
 import { Message } from "@/features/messages/messages";
-import { KoeiroParam } from "@/features/constants/koeiroParam";
 import { ChatLog } from "./chatLog";
 import React, { useCallback, useContext, useRef, useState } from "react";
 import { Settings } from "./settings";
@@ -16,28 +15,32 @@ const i18nMessages = {
 
 type Props = {
   openAiKey: string;
+  dashscopeApiKey: string;
+  ttsModel: string;
   systemPrompt: string;
   chatLog: Message[];
-  koeiroParam: KoeiroParam;
   assistantMessage: string;
   onChangeSystemPrompt: (systemPrompt: string) => void;
   onChangeAiKey: (key: string) => void;
+  onChangeDashscopeApiKey: (key: string) => void;
+  onChangeTtsModel: (key: string) => void;
   onChangeChatLog: (index: number, text: string) => void;
-  onChangeKoeiromapParam: (param: KoeiroParam) => void;
   handleClickResetChatLog: () => void;
   handleClickResetSystemPrompt: () => void;
   locale?: string;
 };
 export const Menu = ({
   openAiKey,
+  dashscopeApiKey,
+  ttsModel,
   systemPrompt,
   chatLog,
-  koeiroParam,
   assistantMessage,
   onChangeSystemPrompt,
   onChangeAiKey,
+  onChangeDashscopeApiKey,
+  onChangeTtsModel,
   onChangeChatLog,
-  onChangeKoeiromapParam,
   handleClickResetChatLog,
   handleClickResetSystemPrompt,
   locale = 'en',
@@ -62,14 +65,18 @@ export const Menu = ({
     [onChangeAiKey]
   );
 
-  const handleChangeKoeiroParam = useCallback(
-    (x: number, y: number) => {
-      onChangeKoeiromapParam({
-        speakerX: x,
-        speakerY: y,
-      });
+  const handleDashscopeApiKeyChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChangeDashscopeApiKey(event.target.value);
     },
-    [onChangeKoeiromapParam]
+    [onChangeDashscopeApiKey]
+  );
+
+  const handleTtsModelChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChangeTtsModel(event.target.value);
+    },
+    [onChangeTtsModel]
   );
 
   const handleClickOpenVrmFile = useCallback(() => {
@@ -139,14 +146,16 @@ return (
       {showSettings && (
         <Settings
           openAiKey={openAiKey}
+          dashscopeApiKey={dashscopeApiKey}
+          ttsModel={ttsModel}
           chatLog={chatLog}
           systemPrompt={systemPrompt}
-          koeiroParam={koeiroParam}
           onClickClose={() => setShowSettings(false)}
           onChangeAiKey={handleAiKeyChange}
+          onChangeDashscopeApiKey={handleDashscopeApiKeyChange}
+          onChangeTtsModel={handleTtsModelChange}
           onChangeSystemPrompt={handleChangeSystemPrompt}
           onChangeChatLog={onChangeChatLog}
-          onChangeKoeiroParam={handleChangeKoeiroParam}
           onClickOpenVrmFile={handleClickOpenVrmFile}
           onClickResetChatLog={handleClickResetChatLog}
           onClickResetSystemPrompt={handleClickResetSystemPrompt}
